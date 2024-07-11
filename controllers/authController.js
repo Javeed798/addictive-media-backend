@@ -77,48 +77,81 @@ exports.login = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   const { bio } = req.body;
-  let profilePicture = req.file ? req.file.path : null; 
+  let profilePicture = req.file ? req.file.path : null;
 
   try {
     const updatedUser = await User.findByIdAndUpdate(
-      req.userId, 
-      { bio, profilePicture }, 
+      req.userId,
+      { bio, profilePicture },
       { new: true }
     );
 
     if (!updatedUser) {
-      return res.status(404).json({ success: false, message: 'User not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     return res.status(200).json({
       success: true,
       message: "Profile updated successfully",
-      user: updatedUser
+      user: updatedUser,
     });
-
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ success: false, message: 'Error updating profile', error });
+    res
+      .status(500)
+      .json({ success: false, message: "Error updating profile", error });
   }
 };
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find()?.populate('videos');
+    const users = await User.find()?.populate("videos");
     res.json(users);
   } catch (error) {
-    console.error('Error fetching users:', error.message);
-    res.status(500).json({ message: 'Error fetching users', error });
+    console.error("Error fetching users:", error.message);
+    res.status(500).json({ message: "Error fetching users", error });
   }
 };
 
 exports.uploadProfilePicture = (req, res, next) => {
-  upload.single('profilePicture')(req, res, (err) => {
+  upload.single("profilePicture")(req, res, (err) => {
     if (err instanceof multer.MulterError) {
-      return res.status(400).json({ message: 'Multer error', error: err });
+      return res.status(400).json({ message: "Multer error", error: err });
     } else if (err) {
-      return res.status(400).json({ message: 'Error uploading profile picture', error: err });
+      return res
+        .status(400)
+        .json({ message: "Error uploading profile picture", error: err });
     }
     next();
   });
+};
+
+exports.getUserByUserId = async (req, res, next) => {
+  const userId = req.params.userId;
+  try {
+    const user = await User.findById(userId).populate("videos");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.getUserByFirstName = async (req, res, next) => {
+  const firstName = req.params.firstName;
+  try {
+    const user = await User.findOne({ firstName }).populate("videos");
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: 'Server error' });
+  }
 };

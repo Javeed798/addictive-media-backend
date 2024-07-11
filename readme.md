@@ -18,7 +18,7 @@
   => when he click on add video a popup will open and in that he will be prompted to add the videos
   => .mp4 format only and no links size limit is 6mb
   => fields are title(30chars) desc(120chars) and video
-  => save it will be saved
+  => save it will be saved    
 
 6. All users page
   => here we will show all users with his respective profilePicture and his username 

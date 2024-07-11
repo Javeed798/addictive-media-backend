@@ -8,8 +8,9 @@ const {
   login,
   updateProfile,
   getAllUsers,
+  getUserByUserId,
+  getUserByFirstName,
 } = require("../controllers/authController");
-
 
 router.post("/register", registerUser);
 router.post("/login", login);
@@ -20,5 +21,8 @@ router.put(
   updateProfile
 );
 router.get("/all-users", authMiddleware, getAllUsers);
+router.get("/:userId", authMiddleware, getUserByUserId);
+router.get('/firstname/:firstName', getUserByFirstName);
+
 
 module.exports = router;
