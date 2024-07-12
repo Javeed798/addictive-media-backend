@@ -20,7 +20,7 @@ router.put(
   upload.single("profilePicture"),
   updateProfile
 );
-router.get("/all-users", authMiddleware, getAllUsers);
+router.get("/all-users", getAllUsers);
 router.get("/:userId", authMiddleware, getUserByUserId);
 router.get('/firstname/:firstName', getUserByFirstName);
 
